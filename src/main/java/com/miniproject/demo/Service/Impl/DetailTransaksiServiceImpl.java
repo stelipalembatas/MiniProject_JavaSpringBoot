@@ -1,5 +1,6 @@
 package com.miniproject.demo.Service.Impl;
 
+import com.miniproject.demo.DTO.DetailTransaksiDTO;
 import com.miniproject.demo.Repository.DetailTransaksiRepository;
 import com.miniproject.demo.Service.DetailTransaksiService;
 import com.miniproject.demo.model.DetailTransaksi;
@@ -18,8 +19,15 @@ public class DetailTransaksiServiceImpl implements DetailTransaksiService {
     @Autowired
     private DetailTransaksiRepository detailTransaksiRepository;
 
+    @Autowired
+    private TransaksiServiceImpl transaksiService;
+
     @Override
-    public DetailTransaksi create(DetailTransaksi detailTransaksi){
+    public DetailTransaksi create(DetailTransaksiDTO detailTransaksiDTO){
+        DetailTransaksi detailTransaksi = new DetailTransaksi();
+        detailTransaksi.setJumlahPenumpang(detailTransaksiDTO.getJumlahPenumpang());
+        detailTransaksi.setJumlahHari(detailTransaksiDTO.getJumlahHari());
+        detailTransaksi.setHarga(detailTransaksiDTO.getHarga());
         return detailTransaksiRepository.save(detailTransaksi);
     }
 
@@ -30,17 +38,21 @@ public class DetailTransaksiServiceImpl implements DetailTransaksiService {
 
     @Override
     public DetailTransaksi findByIdDetTransaksi(Integer id){
-        Optional<DetailTransaksi> optionalDetailTransaksi = detailTransaksiRepository.findById(id);
-        if (optionalDetailTransaksi.isEmpty()){
-            log.warn("Cannot find detail transaksi with {} because not found", id);
-            return null;
-        }
-        return optionalDetailTransaksi.get();
+        return detailTransaksiRepository.findById(id).orElse(null);
     }
 
     @Override
     public DetailTransaksi update(Integer id, DetailTransaksi detailTransaksi) {
-        return null;
+        Optional<DetailTransaksi> optionalDetailTransaksi = detailTransaksiRepository.findById(id);
+        if (optionalDetailTransaksi.isEmpty()){
+            log.warn("Cannot update with {} because not found", id);
+            return null;
+        }
+        DetailTransaksi detailTransaksiById = optionalDetailTransaksi.get();
+        detailTransaksiById.setJumlahPenumpang(detailTransaksi.getJumlahPenumpang());
+        detailTransaksiById.setJumlahHari(detailTransaksi.getJumlahHari());
+        detailTransaksiById.setHarga(detailTransaksi.getHarga());
+        return detailTransaksiRepository.save(detailTransaksiById);
     }
 
     @Override
@@ -48,26 +60,4 @@ public class DetailTransaksiServiceImpl implements DetailTransaksiService {
         detailTransaksiRepository.deleteById(id);
     }
 
-    @Override
-    public DetailTransaksi updateDetTransaksi(Integer id, DetailTransaksi detail){
-        Optional<DetailTransaksi> optionalDetailTransaksi = detailTransaksiRepository.findById(id);
-        if (optionalDetailTransaksi.isEmpty()){
-            log.warn("Cannot update Detail Transaksi with {} because not found", id);
-            return null;
-        }
-        DetailTransaksi detailById = optionalDetailTransaksi.get();
-        detailById.setId(detail.getId());
-        detailById.setIdTransaksi(detail.getIdTransaksi());
-        detailById.setJumlahPenumpang(detail.getJumlahPenumpang());
-        detailById.setJumlahHari(detail.getJumlahHari());
-        detailById.setHarga(detail.getHarga());
-        detailById.setCreatedAt(detail.getCreatedAt());
-        detailById.setUpdatedAt(detail.getUpdatedAt());
-        return detailTransaksiRepository.save(detailById);
-    }
-
-    @Override
-    public void deleteDetTransaksi(Integer id){
-        detailTransaksiRepository.deleteById(id);
-    }
 }

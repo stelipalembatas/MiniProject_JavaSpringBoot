@@ -2,8 +2,6 @@ package com.miniproject.demo.Controller;
 
 
 import com.miniproject.demo.Service.TransportasiService;
-import com.miniproject.demo.model.DetailTransaksi;
-import com.miniproject.demo.model.Transaksi;
 import com.miniproject.demo.model.Transportasi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,33 +29,34 @@ public class TransportasiController {
         return ResponseEntity.ok(transportasiList);
     }
 
-    public List<Transportasi> transportasiById(@RequestParam (required = false) Integer id){
-        if (id == null){
-            return transportasiService.findAllTransportasi();
-        }
-        List<Transportasi> foundTransportasi = new ArrayList<>();
-        Transportasi transportasi = transportasiService.findByIdTransportasi(id);
-        foundTransportasi.add(transportasi);
-        return transportasi;
-    }
-
-    @PatchMapping ("/{id}")
-    public ResponseEntity<?> updateTransportasi(@PathVariable("id") Integer id, @RequestBody Transportasi transportasi){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> transportasiById(@PathVariable("id") Integer id){
         try {
-            Transportasi transportasiUpdated = transportasiService.updateTransportasi(id, transportasi);
-            return ResponseEntity.ok(transportasiUpdated);
-        } catch (Exception e){
+            Transportasi transportasi = transportasiService.findByIdTransportasi(id);
+            return ResponseEntity.ok(transportasi);
+        } catch (Exception e) {
             InternalError internalError = new InternalError(e.getMessage());
             return ResponseEntity.internalServerError().body(internalError);
         }
     }
 
-    @DeleteMapping ("/{id}")
-    public ResponseEntity<?> deleteTransportasi(@PathVariable("id") Integer id){
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateTransportasi(@PathVariable("id") Integer id, @RequestBody Transportasi transportasi){
+        try {
+            Transportasi transportasiUpdated = transportasiService.updateTransportasi(id, transportasi);
+            return ResponseEntity.ok(transportasiUpdated);
+        } catch (Exception e) {
+            InternalError internalError = new InternalError(e.getMessage());
+            return ResponseEntity.internalServerError().body(internalError);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTransportasi(@PathVariable("id") Integer id) {
         try {
             transportasiService.deleteTransportasi(id);
             return ResponseEntity.noContent().build();
-        } catch (Exception e){
+        } catch (Exception e) {
             InternalError internalError = new InternalError(e.getMessage());
             return ResponseEntity.internalServerError().body(internalError);
         }

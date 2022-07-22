@@ -1,8 +1,10 @@
 package com.miniproject.demo.Controller;
 
 
+import com.miniproject.demo.DTO.DetailTransaksiDTO;
 import com.miniproject.demo.Service.DetailTransaksiService;
 import com.miniproject.demo.model.DetailTransaksi;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/DetailTransaksi")
+@RequiredArgsConstructor
+@RequestMapping(value = "/detailtransaksi")
 public class DetailTransaksiController {
     @Autowired
     private DetailTransaksiService detailTransaksiService;
 
     @PostMapping
-    public ResponseEntity<?> createDetailTransaksi(@RequestBody DetailTransaksi detailTransaksi){
-        DetailTransaksi detailCreated = detailTransaksiService.create(detailTransaksi);
-        return ResponseEntity.ok(detailCreated);
+    public ResponseEntity.BodyBuilder createDetailTransaksi(@RequestBody DetailTransaksiDTO detailTransaksiDTO){
+        detailTransaksiService.create(detailTransaksiDTO);
+        return ResponseEntity.ok();
     }
 
     @GetMapping
@@ -28,9 +31,9 @@ public class DetailTransaksiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> detailTransaksiById(@PathVariable("id") Integer id){
+    public ResponseEntity<?> detailTransaksiFindById(@PathVariable("id") Integer id){
         try {
-            DetailTransaksi detailTransaksi = detailTransaksiService.findById(id);
+            DetailTransaksi detailTransaksi = detailTransaksiService.findByIdDetTransaksi(id);
             return ResponseEntity.ok(detailTransaksi);
         } catch (Exception e){
             InternalError internalError = new InternalError(e.getMessage());

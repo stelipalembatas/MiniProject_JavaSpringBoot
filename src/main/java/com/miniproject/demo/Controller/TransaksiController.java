@@ -3,15 +3,11 @@ package com.miniproject.demo.Controller;
 
 import com.miniproject.demo.DTO.TransaksiDTO;
 import com.miniproject.demo.Service.TransaksiService;
-import com.miniproject.demo.model.DetailTransaksi;
 import com.miniproject.demo.model.Transaksi;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,8 +17,9 @@ public class TransaksiController {
     private TransaksiService transaksiService;
 
     @PostMapping
-    public ResponseEntity<Object> createTransaksi(@RequestBody TransaksiDTO request){
-        return transaksiService.create(request);
+    public ResponseEntity.BodyBuilder createTransaksi(@RequestBody TransaksiDTO transaksiDTO){
+        transaksiService.create(transaksiDTO);
+        return ResponseEntity.ok();
     }
 
     @GetMapping
@@ -45,8 +42,8 @@ public class TransaksiController {
     @PatchMapping ("/{id}")
     public ResponseEntity<?> updateTransaksi(@PathVariable("id") Integer id, @RequestBody Transaksi transaksi){
         try {
-            Transaksi transaksiUpdated = transaksiService.update(id, transaksi);
-            return ResponseEntity.ok(transaksiUpdated);
+            Transaksi transaksiUpdate = transaksiService.update(id, transaksi);
+            return ResponseEntity.ok(transaksiUpdate);
         } catch (Exception e){
             InternalError internalError = new InternalError(e.getMessage());
             return ResponseEntity.internalServerError().body(internalError);

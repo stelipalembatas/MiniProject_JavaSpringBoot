@@ -47,7 +47,8 @@ public class PaketWisataServiceImpl implements PaketWisataService {
             return null;
         }
         PaketWisata paketById = optionalPaketWisata.get();
-        paketById.setNama(paketWisata.getNama());
+        paketById.setNamaPaketWisata(paketWisata.getNamaPaketWisata());
+        paketById.setLokasiPaketWisata(paketWisata.getLokasiPaketWisata());
         return paketWisataRepository.save(paketById);
         }
 

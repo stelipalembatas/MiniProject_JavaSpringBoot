@@ -1,19 +1,25 @@
 package com.miniproject.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Data
 @Entity
 @Table(name = "detail_transaksi")
 public class DetailTransaksi {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "Id_Transaksi", nullable = false)
-    private Transaksi idTransaksi;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Id_Transaksi")
+    private Transaksi transaksi;
 
     @Column(name = "Jumlah_Penumpang")
     private Integer jumlahPenumpang;
@@ -23,67 +29,4 @@ public class DetailTransaksi {
 
     @Column(name = "Harga", precision = 25, scale = 2)
     private BigDecimal harga;
-
-    @Column(name = "Created_at")
-    private Instant createdAt;
-
-    @Column(name = "Updated_at")
-    private Instant updatedAt;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Transaksi getIdTransaksi() {
-        return idTransaksi;
-    }
-
-    public void setIdTransaksi(Transaksi idTransaksi) {
-        this.idTransaksi = idTransaksi;
-    }
-
-    public Integer getJumlahPenumpang() {
-        return jumlahPenumpang;
-    }
-
-    public void setJumlahPenumpang(Integer jumlahPenumpang) {
-        this.jumlahPenumpang = jumlahPenumpang;
-    }
-
-    public Integer getJumlahHari() {
-        return jumlahHari;
-    }
-
-    public void setJumlahHari(Integer jumlahHari) {
-        this.jumlahHari = jumlahHari;
-    }
-
-    public BigDecimal getHarga() {
-        return harga;
-    }
-
-    public void setHarga(BigDecimal harga) {
-        this.harga = harga;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
 }

@@ -17,40 +17,36 @@ public class TransportasiServiceImpl {
     @Autowired
     private TransportasiRepository transportasiRepository;
 
-    @Autowired
-    private Transportasi createTransportasi(Transportasi transportasi){
+    public Transportasi createTransportasi(Transportasi transportasi) {
         return transportasiRepository.save(transportasi);
     }
 
-    @Override
-    public List<Transportasi> findAllTransportasi(){
+    public List<Transportasi> findAllTransportasi() {
         return (List<Transportasi>) transportasiRepository.findAll();
     }
 
-    @Override
-    public Transportasi findByIdTransportasi(Integer id){
+    public Transportasi findByIdTransportasi(Integer id) {
         Optional<Transportasi> optionalTransportasi = transportasiRepository.findById(id);
-        if (optionalTransportasi.isEmpty()){
-            log.warn("Cannot find transportasi with {}", id);
+        if (optionalTransportasi.isEmpty()) {
+            log.warn("Cannot find Transportasi with {} because not found", id);
             return null;
         }
         return optionalTransportasi.get();
     }
 
-    @Override
-    public Transportasi updateTransportasi(Integer id, Transportasi transportasi){
+    public Transportasi updateTransportasi(Integer id, Transportasi transportasi) {
         Optional<Transportasi> optionalTransportasi = transportasiRepository.findById(id);
         if (optionalTransportasi.isEmpty()){
-            log.warn("Cannot update transportasi with {}", id);
+            log.warn("Cannot update Transportasi with {} because not found", id);
             return null;
         }
         Transportasi transportasiById = optionalTransportasi.get();
-        transportasiById.setNama(transportasi.getNama());
+        transportasiById.setNamaTransportasi(transportasi.getNamaTransportasi());
+        transportasiById.setTipeTransportasi(transportasi.getTipeTransportasi());
         return transportasiRepository.save(transportasiById);
     }
 
-    @Override
-    public void deleteTransportasi(Integer id){
+    public void deleteTransportasi(Integer id) {
         transportasiRepository.deleteById(id);
     }
 }

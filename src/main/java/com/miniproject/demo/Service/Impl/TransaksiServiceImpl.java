@@ -1,15 +1,16 @@
 package com.miniproject.demo.Service.Impl;
 
+import com.miniproject.demo.DTO.TransaksiDTO;
 import com.miniproject.demo.Repository.TransaksiRepository;
 import com.miniproject.demo.Service.TransaksiService;
-import com.miniproject.demo.model.DetailTransaksi;
-import com.miniproject.demo.model.PaketWisata;
 import com.miniproject.demo.model.Transaksi;
-import com.miniproject.demo.model.Transportasi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -19,25 +20,45 @@ public class TransaksiServiceImpl implements TransaksiService {
     private TransaksiRepository transaksiRepository;
 
     @Autowired
-    private DetailTransaksiServiceImpl detailTransaksiService;
-
-    @Autowired
     private PaketWisataServiceImpl paketWisataService;
 
     @Autowired
     private TransportasiServiceImpl transportasiService;
 
-    @Override
-    public Transaksi create(AddToTransaksiDto addToTransaksiDto){
-        DetailTransaksi detailTransaksi = detailTransaksiService.findById(addToTransaksiDto.getIdDetailTransaksi());
-        PaketWisata paketWisata = paketWisataService.findById(addToTransaksiDto.getIdDetailTransaksi());
-        Transportasi transportasi = transportasiService.findByIdTransportasi(addToTransaksiDto.getIdDetailTransaksi());
+    @Autowired
+    private DetailTransaksiServiceImpl detailTransaksiService;
 
+    @Override
+    public Transaksi create(TransaksiDTO transaksiDTO) {
         Transaksi transaksi = new Transaksi();
-        transaksi.setDetailTransaksi(detailTransaksi);
-        transaksi.setPaketWisata(paketWisata);
-        transaksi.setTransportasi(transportasi);
-        transaksi.setTanggal(addToTransaksiDto.getTanggal());
+        transaksi.setTanggal(transaksiDTO.getTanggal());
+        return transaksiRepository.save(transaksi);
     }
 
-}
+    @Override
+    public List<Transaksi> findAll() {
+        return (List<Transaksi>) transaksiRepository.findAll();
+    }
+
+    @Override
+    public Transaksi findById(Integer id) {
+        return transaksiRepository.findById(id).orElse(null);
+    }
+
+    public Transaksi update(Integer id, Transaksi transaksi) {
+        Optional<Transaksi> optionalTransaksi = transaksiRepository.findById(id);
+        if (optionalTransaksi.isEmpty()) {
+            log.warn("Cannot update Transaksi with {} because not found", id);
+            return null;
+        }
+        Transaksi transaksiById = optionalTransaksi.get();
+        transaksiById.setTanggal(transaksi.getTanggal());
+        return transaksiRepository.save(transaksiById);
+    }
+
+        @Override
+        public void delete (Integer id){
+            transaksiRepository.deleteById(id);
+        }
+
+    }

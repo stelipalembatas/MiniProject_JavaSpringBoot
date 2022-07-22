@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/TempatWisata")
+@RequestMapping("/PaketWisata")
 public class PaketWisataController {
     @Autowired
     private PaketWisataService paketWisataService;
